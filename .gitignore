@@ -1,1 +1,11 @@
+# Virtual Env directory
 env/
+
+# temp pycache files
+__pycache__/
+
+# tests folder
+test/
+
+# generated files
+.sink/

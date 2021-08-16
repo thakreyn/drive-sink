@@ -10,5 +10,8 @@ Terminal based Google Drive Synchronisation Tool
 ## Libraries Used:
     1. os
     2. click
+    3. hashlib
+    4. datetime
+    5. termcolor
 
 ## Installation
