@@ -13,9 +13,12 @@
 """
 
 import os
+import shutil
 from datetime import datetime
 from termcolor import colored
 import configparser
+
+import scan as user_scan
 
 
 CURRENT_LOCATION = os.getcwd()
@@ -46,11 +49,15 @@ def generate_config_file():
 
     # General config details
     config['general'] = {
-        "root" : CURRENT_LOCATION
+        "root" : CURRENT_LOCATION,
+        "drive_status" : False
     }
 
     # User config details
-    config['user'] = {}
+    config['user'] = {
+        "folder_name" : CURRENT_LOCATION,
+        "folder_id" : ""
+    }
 
     with open("./.sink/config/config.ini", "w") as configfile:
         config.write(configfile)
@@ -65,6 +72,18 @@ def read_config_file(section = "general", attr = "root"):
     config.read("./.sink/config/config.ini")
 
     return config[section][attr]
+
+def edit_config_file(section, attr, new_attr):
+    """ Edits the mentioned section and attr in the config.ini """
+
+    edit = configparser.ConfigParser()
+    edit.read(read_config_file() + "/.sink/config/config.ini")
+
+    edit_section = edit[section]
+    edit_section[attr] = new_attr
+
+    with open( read_config_file() + "/.sink/config/config.ini", "w") as configfile:
+        edit.write(configfile)
     
 
 def main_init_process():
@@ -91,11 +110,6 @@ def main_init_process():
         # config file
         generate_config_file()
         
-
-        """
-        Code for setting up User and the first scan of the directory
-        """
-
         # ignore files
         with open("./.sink/ignore.txt", "w+") as file:
             pass
@@ -112,12 +126,28 @@ def main_init_process():
             log_message = f"[{time}] : Initialised Folder at -> {CURRENT_LOCATION}"
             file.write(log_message)
 
+        """
+        Code for setting up User and the first scan of the directory
+        """
+        # First Scan 
+        user_scan.write_metadata(user_scan.initial_scan(read_config_file()))
+
         print(colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green'))
+        print("Please copy 'credentials.json' to '.sink/config' and then run : '" , colored("python main.py initdrive", 'green') , "' to enable drive and verify. ")
 
 
     else:
         print(colored("[Error] : A folder has already been initilised here !", 'red'))
         
 
+def clean_setup():
+    """ Completely deletes the sink directory with all config files """
 
-
+    if check_pre_init():
+        location = read_config_file()
+        dir = ".sink"
+        path = os.path.join(location, dir)
+        shutil.rmtree(path)
+        print(colored("Successfully deleted and cleaned the setup",'green'))
+    else:
+        print("No direcotry found to clean!!")
