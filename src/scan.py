@@ -94,13 +94,6 @@ def ignore_list(curr_dir, mode = 0):
         ignore_files = ignorefile.read().split("\n")
     ignore_directories = []
 
-    print(ignore_files, type(ignore_files))
-
-    # for entry in ignore_files:
-    #     print(entry)
-    #     if entry[0] == '!':
-    #         ignore_directories.append(entry[1:])
-    #         ignore_files.remove(entry)
 
     i = 0
     while i < len(ignore_files):
@@ -112,20 +105,6 @@ def ignore_list(curr_dir, mode = 0):
         else:
             i += 1
 
-    print(ignore_directories)
-
-    # for entry in ignore_files:
-    #     print(entry, entry[1])
-    #     if entry[0] == '!':
-    #         ignore_directories.append(entry[1:])
-    #         ignore_files.remove(entry)
-
-    # for i in range(len(ignore_files)):
-    #     entry = ignore_files[i]
-    #     print(entry, entry[1])
-    #     if entry[0] == '!':
-    #         ignore_directories.append(entry[1:])
-    #         ignore_files.remove(entry)
 
 
     if mode == 0:
@@ -211,13 +190,24 @@ def make_folder_changes():
     write_metadata(folder_data, 1)
 
 
-# def if_ignored(root):
-#     """ Input -> Complete root path
-#         Output-> 
-#      """
+def if_ignored(root, dir, ignore_list):
+    """ Input -> Complete root path
+        Output-> 
+     """
 
+    curr_dir = user_utility.read_config_file()
+
+    root = root.replace(curr_dir, '')
+    
+    if root != '':
+        root = root[1:].split(root[0])
+        
+        for folder in root:
+            if folder in ignore_list:
+                return True
     
 
+    return False
     
 
 
@@ -235,7 +225,7 @@ def scan_folder_changes():
 
     for root, dirs, files in os.walk(curr_dir):
         for dir in dirs:
-            if dir in ignored:
+            if dir in ignored or if_ignored(root, dir, ignored):
                 continue
             else:
                 if os.path.join(root, dir) not in folder_data.keys():
