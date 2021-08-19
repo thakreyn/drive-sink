@@ -19,6 +19,7 @@ from termcolor import colored
 import configparser
 
 import scan as user_scan
+import drive as user_drive
 
 
 CURRENT_LOCATION = os.getcwd()
@@ -42,7 +43,7 @@ def generate_config_file():
     """ 
     Generates the initial config.ini file for the user
     File contains the following data :
-        2 sections -> general, user 
+        2 sections -> general, user    
     """ 
 
     config = configparser.ConfigParser()
@@ -50,7 +51,8 @@ def generate_config_file():
     # General config details
     config['general'] = {
         "root" : CURRENT_LOCATION,
-        "drive_status" : False
+        "drive_status" : False,
+        "populated" : False
     }
 
     # User config details
@@ -63,6 +65,7 @@ def generate_config_file():
         config.write(configfile)
 
 
+# Also available in utility.py
 def read_config_file(section = "general", attr = "root"):
     """ Returns the mentioned attr from a given section 
         (Default: returns the init directory)    
@@ -72,6 +75,7 @@ def read_config_file(section = "general", attr = "root"):
     config.read("./.sink/config/config.ini")
 
     return config[section][attr]
+
 
 def edit_config_file(section, attr, new_attr):
     """ Edits the mentioned section and attr in the config.ini """
@@ -87,6 +91,17 @@ def edit_config_file(section, attr, new_attr):
     
 
 def main_init_process():
+    """
+        Main initialisation routine
+        Init steps: 
+            1. Establish '.sink' directory
+            2. Create subfolders (log, config, meta)
+            3. Generate config file
+            4. Generate ignore file
+            5. Generate log files (usage, commit)
+            6. Copmlete first scan and write to metadata
+
+    """
 
     if not check_pre_init():
         print("Initialising at : " + CURRENT_LOCATION)
@@ -112,7 +127,9 @@ def main_init_process():
         
         # ignore files
         with open("./.sink/ignore.txt", "w+") as file:
-            pass
+            text = "!__pycache__\n!.sink\n!sink"
+            file.write(text)
+            
 
         # usage log
         with open("./.sink/log/usage.log", "w+") as file:
@@ -130,7 +147,7 @@ def main_init_process():
         Code for setting up User and the first scan of the directory
         """
         # First Scan 
-        user_scan.write_metadata(user_scan.initial_scan(read_config_file()))
+        # user_scan.write_metadata(user_scan.initial_scan(read_config_file()))
 
         print(colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green'))
         print("Please copy 'credentials.json' to '.sink/config' and then run : '" , colored("python main.py initdrive", 'green') , "' to enable drive and verify. ")
@@ -140,6 +157,8 @@ def main_init_process():
         print(colored("[Error] : A folder has already been initilised here !", 'red'))
         
 
+
+# To delete the drive folder as well !!!
 def clean_setup():
     """ Completely deletes the sink directory with all config files """
 
@@ -147,7 +166,14 @@ def clean_setup():
         location = read_config_file()
         dir = ".sink"
         path = os.path.join(location, dir)
+
+        if input("Do you want to delete drive folder as well ? (y/n)").lower() == 'y':
+            mydrive = user_drive.MyDrive()
+            root_id = read_config_file("user", "folder_id")
+            mydrive.delete_file(root_id)
+
+
         shutil.rmtree(path)
         print(colored("Successfully deleted and cleaned the setup",'green'))
     else:
-        print("No direcotry found to clean!!")
+        print("No directory found to clean!!")

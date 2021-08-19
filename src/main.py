@@ -23,7 +23,8 @@ def status():
 def scan():
     """ Scan and display status """
     if user_init.check_pre_init():
-        user_scan.full_scan()
+        user_scan.scan_folder_changes()
+        user_scan.ignore_list(user_utility.read_config_file())
     else:
         pass   
 
@@ -31,7 +32,9 @@ def scan():
 @click.command()
 def initdrive():
     """ Run this command after placing credentials.json in .sink/config to verify and authenticate drive """
-    user_drive.init_drive_files()
+    if user_init.check_pre_init():
+        if user_drive.init_drive_files():
+            user_scan.init_folder_structure()
 
 
 @click.command()
@@ -40,16 +43,20 @@ def clean():
     user_init.clean_setup()
 
 
+@click.command()
+def test():
+    """ Test Commands """
+    # user_scan.make_folder_changes()
+    # user_scan.scan_file_changes()
+    user_scan.make_folder_changes()
+    user_scan.make_file_changes()
+
+
 # Definition of CLI group
 @click.group()
 def cli():
     pass
 
-
-@click.command()
-def test():
-    """ Test Commands """
-    user_scan.test_scan()
 
 cli.add_command(status)
 cli.add_command(scan)
@@ -57,6 +64,8 @@ cli.add_command(init)
 cli.add_command(initdrive)
 cli.add_command(clean)
 cli.add_command(test)
+
+# Changed
 
 
 if __name__ == '__main__':

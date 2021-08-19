@@ -6,9 +6,11 @@ from google.oauth2.credentials import Credentials
 from apiclient.http import MediaFileUpload
 
 from termcolor import colored
-from init import read_config_file, edit_config_file
+from utility import read_config_file, edit_config_file, log
+# from init import edit_config_file
 
 import os
+import scan as user_scan
 
 class MyDrive():
 
@@ -41,7 +43,7 @@ class MyDrive():
 
         # Service variable
         self.service = build('drive', 'v3', credentials=creds)
-        print("service built")
+        print("Google Drive Service Built! Connected to Drive. . .")
 
 
     def list_files(self, page_size = 10):
@@ -58,28 +60,38 @@ class MyDrive():
                 print(u'{0} ({1})'.format(item['name'], item['id']))
 
 
-    def upload_file(self, filename, path):
-        folder_id = "1WIFmnbCrxVP4hXDfTnX7Jp1oXcxg8IYX"
-        media = MediaFileUpload(f"{path}{filename}")
+    def upload_file(self, filename, path, folder_id):
 
-        # response = self.service.files().list(
-        #     q = f"name = {filename} and parents = '{folder_id}'",
-        #     spaces = 'drive',
-        #     fields = 'nextPageToken, files(id,name)',
-        #     pageToken = None
-        # ).execute()
+        media = MediaFileUpload(os.path.join(path, filename))
 
         file_metadata = {
             'name': filename,
             'parents' : [folder_id]
             
             }
-        # media = MediaFileUpload('files/photo.jpg', mimetype='image/jpeg')
         file = self.service.files().create(body=file_metadata,
                                             media_body=media,
                                             fields='id').execute()
         
         print(f"New file created! {file.get('id')}")
+
+        return file.get('id')
+
+
+    def update_file(self, filename, path, file_id):
+        """ Update the contents of the given file id"""
+
+        update_media = MediaFileUpload(os.path.join(path, filename))
+
+        file_metadata = {
+            'name': filename
+            }
+
+        update_file = self.service.files().update(
+            fileId = file_id,
+            body = file_metadata,
+            media_body = update_media).execute()
+
 
 
     def create_folder(self, folder_name, parent_folder = ""):
@@ -89,7 +101,7 @@ class MyDrive():
             file_metadata = {
             'name': folder_name,
             'mimeType': 'application/vnd.google-apps.folder'
-        }
+        }   
         else:
             file_metadata = {
             'name': folder_name,
@@ -100,8 +112,17 @@ class MyDrive():
         file = self.service.files().create(body=file_metadata,
                                             fields='id').execute()
 
-        print(f"Folder ID {file.get('id')}")
+        # print(f"\nSource Folder ID {file.get('id')}")
+        # log(f"Created drive Folder ID {file.get('id')}")
+
         return file.get('id')
+
+    def delete_file(self, file_id):
+        """ Deletes the file / folder with given id"""
+
+        # file_id='1AKMgCR6v-6uc-JSvhsttBITJzf7k-pDg'
+
+        file = self.service.files().delete(fileId=file_id).execute()
 
 
 def list_all_files():
@@ -122,13 +143,26 @@ def init_drive_files():
             print(colored("Drive succesfully verified and Initialised",'green'))
 
             folder_id = mydrive.create_folder(read_config_file("user", "folder_name"))
+            log(f"Root Folder ID : {folder_id}")
 
             edit_config_file("user", "folder_id", folder_id)
+
+            print("\nScanning and Initialising Folders. . .")
+
+            log("Drive credentials verified")
+            return True
+
+
 
         else:
             print(colored( "[Error] : credentials.json not found ! Verfictaion unsuccesful", 'red'))
 
-    
+    else:
+        print(colored("[Error] The drive has already been initialised! Use '--help' to see more options",'red'))
+
+    return False
+
+
 
 # def main():
 #     # mydrive = MyDrive()

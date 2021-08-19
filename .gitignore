@@ -9,3 +9,6 @@ test/
 
 # generated files
 .sink/
+
+credentials.json
+token.json

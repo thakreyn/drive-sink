@@ -15,3 +15,8 @@ Terminal based Google Drive Synchronisation Tool
     5. termcolor
 
 ## Installation
+
+## TODO
+
+1. Drive file delete on clean
+
