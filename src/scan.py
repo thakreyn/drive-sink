@@ -92,15 +92,41 @@ def ignore_list(curr_dir, mode = 0):
 
     with open(path, "r") as ignorefile:
         ignore_files = ignorefile.read().split("\n")
-
-    print(ignore_files)
     ignore_directories = []
 
-    for entry in ignore_files:
-        print(entry, entry[1])
+    print(ignore_files, type(ignore_files))
+
+    # for entry in ignore_files:
+    #     print(entry)
+    #     if entry[0] == '!':
+    #         ignore_directories.append(entry[1:])
+    #         ignore_files.remove(entry)
+
+    i = 0
+    while i < len(ignore_files):
+        entry = ignore_files[i]
+
         if entry[0] == '!':
             ignore_directories.append(entry[1:])
-            ignore_files.remove(entry)
+            ignore_files.pop(i)
+        else:
+            i += 1
+
+    print(ignore_directories)
+
+    # for entry in ignore_files:
+    #     print(entry, entry[1])
+    #     if entry[0] == '!':
+    #         ignore_directories.append(entry[1:])
+    #         ignore_files.remove(entry)
+
+    # for i in range(len(ignore_files)):
+    #     entry = ignore_files[i]
+    #     print(entry, entry[1])
+    #     if entry[0] == '!':
+    #         ignore_directories.append(entry[1:])
+    #         ignore_files.remove(entry)
+
 
     if mode == 0:
         return ignore_files
@@ -166,8 +192,11 @@ def make_folder_changes():
             new_folder_id = mydrive.create_folder(v[1], curr_dir_id)
             folder_data[k] = Folder(v[1], v[0], curr_dir_id, new_folder_id)
         else:
-            new_folder_id = mydrive.create_folder(v[1], folder_data[v[0]].folder_id)
-            folder_data[k] = Folder(v[1], v[0], folder_data[v[0]].folder_id, new_folder_id)
+            try:
+                new_folder_id = mydrive.create_folder(v[1], folder_data[v[0]].folder_id)
+                folder_data[k] = Folder(v[1], v[0], folder_data[v[0]].folder_id, new_folder_id)
+            except:
+                pass
         
         write_metadata(folder_data, 1)
 
@@ -180,6 +209,16 @@ def make_folder_changes():
 
     user_utility.log(f"{len(new_folders)} folders added , {len(deleted_folders)} folders deleted")
     write_metadata(folder_data, 1)
+
+
+# def if_ignored(root):
+#     """ Input -> Complete root path
+#         Output-> 
+#      """
+
+    
+
+    
 
 
 def scan_folder_changes():
@@ -306,6 +345,7 @@ def scan_file_changes():
 
     return (newfiles, deleted_files, updated_files)
 
+
 def make_file_changes():
     """ Commit the scanned changes to the drive and local machines """
 
@@ -324,7 +364,7 @@ def make_file_changes():
         if value[0] == curr_dir:
             new_file_id = mydrive.upload_file(value[1], value[0], curr_dir_id)
             new_file_hash = hashing_function(file)
-            file_data[file] = File(value[1], value[0], new_file_id, new_file_hash)
+            file_data[file] = File(value[1], value[0], curr_dir_id,new_file_id, new_file_hash)
         else:
             parent_id = folder_data[value[0]].folder_id
             new_file_id = mydrive.upload_file(value[1], value[0], parent_id)
@@ -351,8 +391,6 @@ def make_file_changes():
 
     user_utility.log(f"{len(new_files)} files added , {len(deleted_files)} files deleted and {len(updated_files)} files were updated")
     write_metadata(file_data, 0)
-
-
 
 
 def init_folder_structure():
@@ -433,3 +471,4 @@ def init_file_structure():
     write_metadata(filesdict, 0)
     user_utility.edit_config_file("general", "populated", "True")
     user_utility.log("File structure initialised properly!")
+

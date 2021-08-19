@@ -50,6 +50,7 @@ def test():
     # user_scan.scan_file_changes()
     user_scan.make_folder_changes()
     user_scan.make_file_changes()
+    # user_scan.walk()
 
 
 # Definition of CLI group
