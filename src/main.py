@@ -9,7 +9,7 @@ import drive as user_drive
 
 @click.command()
 def init():
-    ''' Main logic for Initialing the folder. Calls init.py '''
+    ''' Initializes the local directory structure '''
     user_init.main_init_process()
 
 
@@ -21,10 +21,11 @@ def status():
 
 @click.command()
 def scan():
-    """ Scan and display status """
-    if user_init.check_pre_init():
+    """ Scan and display changes in the directory """
+    if user_init.check_pre_init() and user_utility.check_drive_init():
         user_scan.scan_folder_changes()
-        user_scan.ignore_list(user_utility.read_config_file())
+        user_scan.scan_file_changes()
+        # user_scan.ignore_list(user_utility.read_config_file())
     else:
         pass   
 
@@ -44,6 +45,16 @@ def clean():
 
 
 @click.command()
+def sync():
+    """ Synchronizes the changes with the drive """
+
+    if user_init.check_pre_init() and user_utility.check_drive_init():
+        user_scan.make_folder_changes()
+        user_scan.make_file_changes()
+
+
+
+@click.command()
 def test():
     """ Test Commands """
     # user_scan.make_folder_changes()
@@ -58,8 +69,7 @@ def test():
 def cli():
     pass
 
-
-cli.add_command(status)
+cli.add_command(sync)
 cli.add_command(scan)
 cli.add_command(init)
 cli.add_command(initdrive)

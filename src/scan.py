@@ -60,27 +60,6 @@ def hashing_function(filename):
     return md5_hash.hexdigest()
 
 
-# Legacy
-# def initial_scan(curr_dir):
-#     """ Completely scans the directory and returns dict of files and their hash """
-
-#     filedict = dict()
-#     # curr_dir = user_init.read_config_file("general", "root")
-
-#     ignored = ignore_list(curr_dir)
-
-#     for root, dirs, files in os.walk(curr_dir):
-#         for filename in files:
-#             if filename in ignored:
-#                 continue
-#             else:
-#                 filedict[os.path.join(root, filename)] = hashing_function(os.path.join(root, filename))
-
-
-#     print(filedict)
-#     return filedict
-
-
 def ignore_list(curr_dir, mode = 0):
     """ Returns a list of only filenames (without root and with extensions) to be ignored 
         Mode = 0 -> returns files
@@ -104,8 +83,6 @@ def ignore_list(curr_dir, mode = 0):
             ignore_files.pop(i)
         else:
             i += 1
-
-
 
     if mode == 0:
         return ignore_files

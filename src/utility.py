@@ -25,6 +25,7 @@ def log(message , file = "usage.log"):
             log_message = f"\n[{time}] : {message}"
             file.write(log_message)
 
+
 def read_config_file(section = "general", attr = "root"):
     """ Returns the mentioned attr from a given section 
         (Default: returns the init directory)    
@@ -34,6 +35,7 @@ def read_config_file(section = "general", attr = "root"):
     config.read("./.sink/config/config.ini")
 
     return config[section][attr]
+
 
 def edit_config_file(section, attr, new_attr):
     """ Edits the mentioned section and attr in the config.ini """
@@ -47,3 +49,11 @@ def edit_config_file(section, attr, new_attr):
     with open( read_config_file() + "/.sink/config/config.ini", "w") as configfile:
         edit.write(configfile)
     
+    
+def check_drive_init():
+    """ Checks if the drive data is initialised
+        True -> Initialised
+        False -> Not
+     """
+
+    return bool(read_config_file("general", "drive_status"))
