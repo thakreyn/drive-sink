@@ -118,18 +118,14 @@ def main_init_process():
             path = os.path.join(CURRENT_LOCATION + "/.sink" , subdirectory)
             os.mkdir(path)
 
-        
-        # Creating files : 
-
         # config file
         generate_config_file()
         
         # ignore files
         with open("./.sink/ignore.txt", "w+") as file:
-            text = "!__pycache__\n!.sink\n!sink"
+            text = "!__pycache__\n!.sink\n!sink\ncredentials.json\ntoken.json"
             file.write(text)
             
-
         # usage log
         with open("./.sink/log/usage.log", "w+") as file:
             time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -167,7 +163,7 @@ def clean_setup():
         dir = ".sink"
         path = os.path.join(location, dir)
 
-        if input("Do you want to delete drive folder as well ? (y/n)").lower() == 'y':
+        if input("Do you want to delete drive folder as well ? (y/n) : ").lower() == 'y':
             if read_config_file("general", "drive_status") == 'True':
                 mydrive = user_drive.MyDrive()
                 root_id = read_config_file("user", "folder_id")

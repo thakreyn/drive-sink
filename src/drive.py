@@ -138,7 +138,9 @@ def init_drive_files():
 
     curr_dir = user_utility.read_config_file()
 
+    # Checks if drive has been laready initialised
     if user_utility.read_config_file("general","drive_status") == "False":
+        
         if os.path.exists(curr_dir + "/.sink/config/credentials.json"):
             mydrive = MyDrive()
             user_utility.edit_config_file("general", "drive_status", "True")
