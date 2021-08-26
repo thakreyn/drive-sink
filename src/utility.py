@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 import configparser
 
-import init as user_init
+from . import init as user_init
 
 
 def log(message , file = "usage.log"):

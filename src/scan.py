@@ -21,9 +21,9 @@ import hashlib
 from termcolor import colored
 import pickle
 
-import init as user_init
-import utility as user_utility
-import drive as user_drive
+from . import init as user_init
+from . import utility as user_utility
+from . import drive as user_drive
 
 class Folder:
     def __init__(self, name, root, parent_id, folder_id):

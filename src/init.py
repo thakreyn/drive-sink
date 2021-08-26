@@ -18,8 +18,8 @@ from datetime import datetime
 from termcolor import colored
 import configparser
 
-import scan as user_scan
-import drive as user_drive
+from . import scan as user_scan
+from . import drive as user_drive
 
 
 CURRENT_LOCATION = os.getcwd()
@@ -99,8 +99,7 @@ def main_init_process():
             3. Generate config file
             4. Generate ignore file
             5. Generate log files (usage, commit)
-            6. Copmlete first scan and write to metadata
-
+            6. Complete first scan and write to metadata
     """
 
     if not check_pre_init():
@@ -157,10 +156,11 @@ def main_init_process():
         print(colored("[Error] : A folder has already been initilised here !", 'red'))
         
 
-
-# To delete the drive folder as well !!!
 def clean_setup():
-    """ Completely deletes the sink directory with all config files """
+    """ 
+        Completely deletes the sink directory with all config files and 
+        option to delete the drive folder as well
+    """
 
     if check_pre_init():
         location = read_config_file()
@@ -168,9 +168,10 @@ def clean_setup():
         path = os.path.join(location, dir)
 
         if input("Do you want to delete drive folder as well ? (y/n)").lower() == 'y':
-            mydrive = user_drive.MyDrive()
-            root_id = read_config_file("user", "folder_id")
-            mydrive.delete_file(root_id)
+            if read_config_file("general", "drive_status") == 'True':
+                mydrive = user_drive.MyDrive()
+                root_id = read_config_file("user", "folder_id")
+                mydrive.delete_file(root_id)
 
 
         shutil.rmtree(path)

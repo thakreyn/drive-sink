@@ -6,11 +6,13 @@ from google.oauth2.credentials import Credentials
 from apiclient.http import MediaFileUpload
 
 from termcolor import colored
-from utility import read_config_file, edit_config_file, log
+
+# from . import utility import read_config_file, edit_config_file, log
+from . import utility as user_utility
 # from init import edit_config_file
 
 import os
-import scan as user_scan
+from . import scan as user_scan
 
 class MyDrive():
 
@@ -23,7 +25,7 @@ class MyDrive():
         # created automatically when the authorization flow completes for the first
         # time.
 
-        curr_dir = read_config_file() + "/.sink/config/"
+        curr_dir = user_utility.read_config_file() + "/.sink/config/"
 
         if os.path.exists(curr_dir + 'token.json'):
             creds = Credentials.from_authorized_user_file(curr_dir + 'token.json', SCOPES)
@@ -134,22 +136,22 @@ def list_all_files():
 def init_drive_files():
     """ Initializes the files token.json and verfies credentials.json for further use """
 
-    curr_dir = read_config_file()
+    curr_dir = user_utility.read_config_file()
 
-    if read_config_file("general","drive_status") == "False":
+    if user_utility.read_config_file("general","drive_status") == "False":
         if os.path.exists(curr_dir + "/.sink/config/credentials.json"):
             mydrive = MyDrive()
-            edit_config_file("general", "drive_status", "True")
+            user_utility.edit_config_file("general", "drive_status", "True")
             print(colored("Drive succesfully verified and Initialised",'green'))
 
-            folder_id = mydrive.create_folder(read_config_file("user", "folder_name"))
-            log(f"Root Folder ID : {folder_id}")
+            folder_id = mydrive.create_folder(user_utility.read_config_file("user", "folder_name"))
+            user_utility.log(f"Root Folder ID : {folder_id}")
 
-            edit_config_file("user", "folder_id", folder_id)
+            user_utility.edit_config_file("user", "folder_id", folder_id)
 
             print("\nScanning and Initialising Folders. . .")
 
-            log("Drive credentials verified")
+            user_utility.log("Drive credentials verified")
             return True
 
 
@@ -162,25 +164,3 @@ def init_drive_files():
 
     return False
 
-
-
-# def main():
-#     # mydrive = MyDrive()
-#     # path = "./folder/"
-#     # files = os.listdir(path)
-
-#     # # for item in files:
-#     # #     mydrive.upload_file(item, path)
-
-#     # mydrive.create_folder("Test Backup", )
-
-#     curr_dir = read_config_file() + "/.sink/config/"
-
-#     print(curr_dir + 'token.json')
-
-#     print(os.path.exists(curr_dir + 'token.json'))
-        
-
-
-# if __name__ == '__main__':
-#     main()

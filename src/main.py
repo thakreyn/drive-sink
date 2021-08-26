@@ -1,10 +1,12 @@
+#!d:\projects\sink\env\scripts\python.exe
+
 import os
 import click
 
-import init as user_init
-import scan as user_scan
-import utility as user_utility
-import drive as user_drive
+from . import init as user_init
+from . import scan as user_scan
+from . import utility as user_utility
+from . import drive as user_drive
 
 
 @click.command()
