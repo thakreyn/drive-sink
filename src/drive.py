@@ -63,6 +63,7 @@ class MyDrive():
 
 
     def upload_file(self, filename, path, folder_id):
+        """ Uploads the given filename to the drive in given folder id """
 
         media = MediaFileUpload(os.path.join(path, filename))
 
@@ -114,8 +115,6 @@ class MyDrive():
         file = self.service.files().create(body=file_metadata,
                                             fields='id').execute()
 
-        # print(f"\nSource Folder ID {file.get('id')}")
-        # log(f"Created drive Folder ID {file.get('id')}")
 
         return file.get('id')
 
@@ -140,7 +139,7 @@ def init_drive_files():
 
     # Checks if drive has been laready initialised
     if user_utility.read_config_file("general","drive_status") == "False":
-        
+
         if os.path.exists(curr_dir + "/.sink/config/credentials.json"):
             mydrive = MyDrive()
             user_utility.edit_config_file("general", "drive_status", "True")

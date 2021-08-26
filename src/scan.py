@@ -149,6 +149,8 @@ def make_folder_changes():
 
     # Adding folders
 
+    
+
     for k , v in new_folders.items():
         # Check if folder root is drive root v[0] = root and v[1] = dir
         if v[0] == curr_dir:

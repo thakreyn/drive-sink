@@ -117,7 +117,6 @@ cli.add_command(init)
 cli.add_command(initdrive)
 cli.add_command(clean)
 cli.add_command(log)
-cli.add_command(test)
 cli.add_command(status)
 
 

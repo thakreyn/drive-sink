@@ -138,11 +138,7 @@ def main_init_process():
             log_message = f"[{time}] : Initialised Folder at -> {CURRENT_LOCATION}"
             file.write(log_message)
 
-        """
-        Code for setting up User and the first scan of the directory
-        """
-        # First Scan 
-        # user_scan.write_metadata(user_scan.initial_scan(read_config_file()))
+       
 
         print(colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green'))
         print("Please copy 'credentials.json' to '.sink/config' and then run : '" , colored("python main.py initdrive", 'green') , "' to enable drive and verify. ")

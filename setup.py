@@ -5,8 +5,6 @@ def readme():
         return f.read()
 
 
-
-
 setup(
     name = 'sink',
     version = '1.0.1',
