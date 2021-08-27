@@ -372,6 +372,8 @@ def make_file_changes():
     for file, data in updated_files.items():
         mydrive.update_file(data.name, data.root, data.file_id)
         print(f"{file} : Updated!")
+
+
         file_data[file] = data
         write_metadata(file_data, 0)
 
@@ -457,4 +459,5 @@ def init_file_structure():
     write_metadata(filesdict, 0)
     user_utility.edit_config_file("general", "populated", "True")
     user_utility.log("File structure initialised properly!")
+    print("File structure initialised properly!")
 

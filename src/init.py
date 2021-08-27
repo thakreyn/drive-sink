@@ -140,9 +140,12 @@ def main_init_process():
 
        
 
-        print(colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green'))
-        print("Please copy 'credentials.json' to '.sink/config' and then run : '" , colored("python main.py initdrive", 'green') , "' to enable drive and verify. ")
-
+        print(f"""
+        {colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green')}
+        Please copy 'credentials.json' to '.sink/config' and then run : {colored("sink initdrive", 'green')} to enable drive and verify.
+        If you don't have a credentials.json file, see documentation for instructions to generate one.
+        If this directory was initialised by mistake, use 'sink clean' to cancel.
+        """)
 
     else:
         print(colored("[Error] : A folder has already been initilised here !", 'red'))

@@ -76,7 +76,7 @@ class MyDrive():
                                             media_body=media,
                                             fields='id').execute()
         
-        print(f"New file created! {file.get('id')}")
+        print(f"New file created! {file.get('id')} : {filename} \r", end='')
 
         return file.get('id')
 
