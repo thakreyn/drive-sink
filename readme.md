@@ -2,7 +2,7 @@
 
 Sink is a CLI synchronisation tool that enables a user to synchronise 
 local system files and folders onto their Google Drives. It follows
-a git CLI like approach in 
+a git CLI like approach in terms of interface 
 
 ## Installation
 
@@ -13,17 +13,31 @@ commands in that folder. (It is advised to install in a virutal environment)
 
 ```bash
   pip install .
-  cd drive-sink
+  cd drive-sink-main
 ```
 
 Run the command `sink` from the environment to use the tool.
+
+![Sink-main](assets/sink-main.png)
 
 
 ## Script Setup
 
 In case of a virtual environment, one might use the script inside `scripts` folder by replacing the path inside the `sink.bat` with the path of `sink.exe` inside your env/scripts. And then add this script to your environment variables.
 
+
+Assuming the path of env/scripts is : `D:\Projects\trial\env\Scripts\sink.exe`
+
+```batch
+@echo off
+
+:: Replace the <path> with the absolute path of your env/scripts folder
+:startsink  
+D:\Projects\trial\env\Scripts\sink.exe %*
+```
+
 (NOTE: Above is applicable for windows only. Linux and Mac users need to create separate scripts)
+
 
 ## Google Drive API Setup
 
@@ -35,11 +49,20 @@ After enabling the Drive API, you need to generate credentials for your account,
 
 [Generate credentials for your account](https://support.google.com/cloud/answer/6158849?hl=en)
 
-After generating the credentials, download the `.json` file with credentials and rename it to `credentials.json` and paste it in the config folder after initialising a directory.
+After generating the credentials, download the `.json` file with credentials and rename it to `credentials.json` and paste it in the config folder 'after' initialising a directory.
 
 ## Documentation
 
 You can type in `sink` in your terminal or `sink --help` to see all the available commands available.
+* `sink init` : Initialise the folder and config details
+* `sink initdrive` : Verify credentials and sync files to drive
+* `sink scan` : Scans the directory for changes in files and folders
+* `sink sync` : Updates/commits the changes to the drive
+* `sink log` : Shows the commit log
+* `sink status` : Shows general config information
+* `sink clean` : Cleans (untracks) the given folder with option to delete drive folder as well
+
+For further options for each command, type `sink <command-name> --help`
 
 
 ## Usage
@@ -58,8 +81,4 @@ You can type in `sink` in your terminal or `sink --help` to see all the availabl
 [MIT](https://choosealicense.com/licenses/mit/)
 
   
-## Documentation
 
-[Documentation](https://linktodocumentation)
-
-  
