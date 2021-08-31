@@ -100,6 +100,7 @@ def main_init_process():
             4. Generate ignore file
             5. Generate log files (usage, commit)
             6. Complete first scan and write to metadata
+            7. Establish the drive-sink directory in users folder
     """
 
     if not check_pre_init():
@@ -117,6 +118,15 @@ def main_init_process():
         for subdirectory in subdirectories:
             path = os.path.join(CURRENT_LOCATION + "/.sink" , subdirectory)
             os.mkdir(path)
+
+        # Check if drive-sink is available in users directory, else -> initialise it (with name .drive-sink)
+
+        user_folder_path = os.path.expanduser("~")
+        user_folder_path = os.path.join(user_folder_path, ".drive-sink")
+
+        if not os.path.exists(user_folder_path):
+            os.mkdir(user_folder_path)
+            
 
         # config file
         generate_config_file()
@@ -138,14 +148,41 @@ def main_init_process():
             log_message = f"[{time}] : Initialised Folder at -> {CURRENT_LOCATION}"
             file.write(log_message)
 
+        
+        # Check if credentials already exist, then inform the user about the file being used
+        # and give option to use local credentials file
+
+        if os.path.exists(os.path.join(user_folder_path, 'credentials.json')):
+            print(f"\nCredentials.json already found at global location {colored(user_folder_path, 'green')} using it by default.")
+
+            print(f"""
+            {colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green')}
+            Run command:
+            
+                '{colored("sink initdrive", 'green')}' to enable the drive and verify.
+
+            (optional) If you want to use local credentials, please copy 'credentials.json' to '.sink/config' 
+            and then run `sink initdrive`.
+            If you don't have a credentials.json file, see documentation for instructions to generate one.
+            If this directory was initialised by mistake, use 'sink clean' to cancel.
+            """)
+
+        else:
+            print(f"""
+            {colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green')}
+            {colored("No global 'credentials.json' found!", 'red')}
+            Please copy 'credentials.json' to '{user_folder_path}' for global access or 
+            to '.sink/config' if you want to use different local credentials. 
+            Then run :
+
+                '{colored("sink initdrive", 'green')}' to enable drive and verify.
+                
+            If you don't have a credentials.json file, see documentation for instructions to generate one.
+            If this directory was initialised by mistake, use 'sink clean' to cancel.
+            """)
+
        
 
-        print(f"""
-        {colored("Folder has been successfully initialised at " + CURRENT_LOCATION, 'green')}
-        Please copy 'credentials.json' to '.sink/config' and then run : {colored("sink initdrive", 'green')} to enable drive and verify.
-        If you don't have a credentials.json file, see documentation for instructions to generate one.
-        If this directory was initialised by mistake, use 'sink clean' to cancel.
-        """)
 
     else:
         print(colored("[Error] : A folder has already been initilised here !", 'red'))

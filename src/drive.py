@@ -30,13 +30,26 @@ class MyDrive():
         if os.path.exists(curr_dir + 'token.json'):
             creds = Credentials.from_authorized_user_file(curr_dir + 'token.json', SCOPES)
 
+    
+        # Set the path for credentials file. Local credentials have higher priority than Global credentials at users folder
+        credentials_path = ""
+
+        if os.path.exists(curr_dir + 'credentials.json'):
+            credentials_path = curr_dir + 'credentials.json'
+        else:
+            # Load global-credentials
+            credentials_path = os.path.expanduser("~")
+            credentials_path = os.path.join(credentials_path, ".drive-sink", "credentials.json")
+
+        print(f"Using 'credentials.json' file from {credentials_path}")
+
         # If there are no (valid) credentials available, let the user log in.
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    curr_dir + 'credentials.json', SCOPES)
+                    credentials_path, SCOPES)
                 creds = flow.run_local_server(port=0)
 
             # Save the credentials for the next run
@@ -140,7 +153,10 @@ def init_drive_files():
     # Checks if drive has been laready initialised
     if user_utility.read_config_file("general","drive_status") == "False":
 
-        if os.path.exists(curr_dir + "/.sink/config/credentials.json"):
+        user_folder_path = os.path.expanduser("~")
+        user_folder_path = os.path.join(user_folder_path, ".drive-sink", "credentials.json")
+
+        if os.path.exists(curr_dir + "/.sink/config/credentials.json") or os.path.exists(user_folder_path):
             mydrive = MyDrive()
             user_utility.edit_config_file("general", "drive_status", "True")
             print(colored("Drive succesfully verified and Initialised",'green'))
