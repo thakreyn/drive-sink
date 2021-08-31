@@ -416,10 +416,6 @@ def init_folder_structure():
     user_utility.log("Folder structure initialised properly!")
     init_file_structure() 
 
-    # For debug
-    # for k, v in folders.items():
-    #     print(k,v)
-
 
 
 def init_file_structure():

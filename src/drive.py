@@ -76,7 +76,7 @@ class MyDrive():
                                             media_body=media,
                                             fields='id').execute()
         
-        print(f"New file created! {file.get('id')} : {filename} \r", end='')
+        print(f"New file created! {file.get('id')} : {filename} \r                                                                                       \r", end='')
 
         return file.get('id')
 
@@ -115,7 +115,7 @@ class MyDrive():
         file = self.service.files().create(body=file_metadata,
                                             fields='id').execute()
 
-
+        print(f"New folder created! {file.get('id')} : {folder_name} \r                                                                                       \r", end='')
         return file.get('id')
 
     def delete_file(self, file_id):
