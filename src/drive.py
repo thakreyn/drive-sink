@@ -25,10 +25,13 @@ class MyDrive():
         # created automatically when the authorization flow completes for the first
         # time.
 
-        curr_dir = user_utility.read_config_file() + "/.sink/config/"
+        # curr_dir = user_utility.read_config_file() + "/.sink/config/"
+        curr_dir = user_utility.read_config_file()
+        curr_dir = os.path.join(curr_dir, '.sink', 'config')
 
-        if os.path.exists(curr_dir + 'token.json'):
-            creds = Credentials.from_authorized_user_file(curr_dir + 'token.json', SCOPES)
+        
+        if os.path.exists(os.path.join(curr_dir, 'token.json')):
+            creds = Credentials.from_authorized_user_file(os.path.join(curr_dir, 'token.json'), SCOPES)
 
     
         # Set the path for credentials file. Local credentials have higher priority than Global credentials at users folder
@@ -53,7 +56,8 @@ class MyDrive():
                 creds = flow.run_local_server(port=0)
 
             # Save the credentials for the next run
-            with open(curr_dir + 'token.json', 'w') as token:
+            
+            with open(os.path.join(curr_dir, 'token.json'), 'w') as token:
                 token.write(creds.to_json())
 
         # Service variable
@@ -89,7 +93,7 @@ class MyDrive():
                                             media_body=media,
                                             fields='id').execute()
         
-        print(f"New file created! {file.get('id')} : {filename} \r                                                                                       \r", end='')
+        print(f"\r                                                                                                                       \rNew file created! {file.get('id')} : {filename}", end='')
 
         return file.get('id')
 
@@ -128,7 +132,7 @@ class MyDrive():
         file = self.service.files().create(body=file_metadata,
                                             fields='id').execute()
 
-        print(f"New folder created! {file.get('id')} : {folder_name} \r                                                                                       \r", end='')
+        print(f"\r                                                                                                                       \rNew folder created! {file.get('id')} : {folder_name}", end='')
         return file.get('id')
 
     def delete_file(self, file_id):
@@ -156,7 +160,8 @@ def init_drive_files():
         user_folder_path = os.path.expanduser("~")
         user_folder_path = os.path.join(user_folder_path, ".drive-sink", "credentials.json")
 
-        if os.path.exists(curr_dir + "/.sink/config/credentials.json") or os.path.exists(user_folder_path):
+        
+        if os.path.exists(os.path.join(curr_dir, '.sink', 'config', 'credentials.json')) or os.path.exists(user_folder_path):
             mydrive = MyDrive()
             user_utility.edit_config_file("general", "drive_status", "True")
             print(colored("Drive succesfully verified and Initialised",'green'))

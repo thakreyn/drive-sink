@@ -68,7 +68,8 @@ def ignore_list(curr_dir, mode = 0):
         Mode = 1 -> returns directories
     """
 
-    path = curr_dir + "/.sink/ignore.txt"
+    path = os.path.join(curr_dir, '.sink', 'ignore.txt')
+    # path = curr_dir + "/.sink/ignore.txt"
 
     with open(path, "r") as ignorefile:
         ignore_files = ignorefile.read().split("\n")
@@ -105,9 +106,11 @@ def write_metadata(metadata, mode = 0):
     curr_dir = user_init.read_config_file("general", "root")
 
     if mode == 0:
-        path = curr_dir + "/.sink/meta/filesdata.pickle"
+        path = os.path.join(curr_dir, '.sink', 'meta', 'filesdata.pickle')
+        # path = curr_dir + "/.sink/meta/filesdata.pickle"
     else:
-        path = curr_dir + "/.sink/meta/foldersdata.pickle"
+        path = os.path.join(curr_dir, '.sink', 'meta', 'foldersdata.pickle')
+        # path = curr_dir + "/.sink/meta/foldersdata.pickle"
 
 
     with open(path , "wb") as file:
@@ -126,9 +129,11 @@ def read_metadata(mode = 0):
     curr_dir = user_init.read_config_file("general", "root")
 
     if mode == 0:
-        path = curr_dir + "/.sink/meta/filesdata.pickle"
+        path = os.path.join(curr_dir, '.sink', 'meta', 'filesdata.pickle')
+        # path = curr_dir + "/.sink/meta/filesdata.pickle"
     else:
-        path = curr_dir + "/.sink/meta/foldersdata.pickle"
+        path = os.path.join(curr_dir, '.sink', 'meta', 'foldersdata.pickle')
+        # path = curr_dir + "/.sink/meta/foldersdata.pickle"
 
     with open(path, "rb") as file:
         prefiledict = pickle.load(file)

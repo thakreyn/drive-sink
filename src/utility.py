@@ -19,7 +19,8 @@ def log(message , file = "usage.log"):
 
     curr_dir = user_init.read_config_file()
 
-    path = curr_dir + "/.sink/log/" + file
+    path = os.path.join(curr_dir, '.sink', 'log', file)
+    # path = curr_dir + "/.sink/log/" + file
 
     with open(path , "a") as file:
             time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -34,7 +35,8 @@ def read_log(length, file = "commit.log"):
 
     curr_dir = user_init.read_config_file()
 
-    path = curr_dir + "/.sink/log/" + file
+    # path = curr_dir + "/.sink/log/" + file
+    path = os.path.join(curr_dir, '.sink', 'log', file)
 
     with open(path, 'r') as file:
         data = file.read().split('\n')
@@ -54,7 +56,8 @@ def read_config_file(section = "general", attr = "root"):
     """
 
     config = configparser.ConfigParser()
-    config.read("./.sink/config/config.ini")
+    
+    config.read(os.path.join('.', '.sink', 'config', 'config.ini'))
 
     return config[section][attr]
 
@@ -63,12 +66,13 @@ def edit_config_file(section, attr, new_attr):
     """ Edits the mentioned section and attr in the config.ini """
 
     edit = configparser.ConfigParser()
-    edit.read(read_config_file() + "/.sink/config/config.ini")
+    
+    edit.read(os.path.join(read_config_file(), '.sink', 'config', 'config.ini'))
 
     edit_section = edit[section]
     edit_section[attr] = new_attr
 
-    with open( read_config_file() + "/.sink/config/config.ini", "w") as configfile:
+    with open( os.path.join(read_config_file(), '.sink', 'config', 'config.ini'), "w") as configfile:
         edit.write(configfile)
     
 

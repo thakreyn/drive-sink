@@ -31,7 +31,8 @@ def check_pre_init():
         False -> Not init
      """
 
-    filename = CURRENT_LOCATION + "\.sink"
+    # filename = CURRENT_LOCATION + "\.sink"
+    filename = os.path.join(CURRENT_LOCATION, '.sink')
 
     if os.path.exists(filename):
         return True
@@ -61,7 +62,9 @@ def generate_config_file():
         "folder_id" : ""
     }
 
-    with open("./.sink/config/config.ini", "w") as configfile:
+
+    path = os.path.join(os.getcwd(), '.sink', 'config', 'config.ini')
+    with open(path, "w") as configfile:
         config.write(configfile)
 
 
@@ -72,7 +75,8 @@ def read_config_file(section = "general", attr = "root"):
     """
 
     config = configparser.ConfigParser()
-    config.read("./.sink/config/config.ini")
+    path = os.path.join(os.getcwd(), '.sink', 'config', 'config.ini')
+    config.read(path)
 
     return config[section][attr]
 
@@ -81,12 +85,14 @@ def edit_config_file(section, attr, new_attr):
     """ Edits the mentioned section and attr in the config.ini """
 
     edit = configparser.ConfigParser()
-    edit.read(read_config_file() + "/.sink/config/config.ini")
+    
+    # edit.read(read_config_file() + "/.sink/config/config.ini")
+    edit.read(os.path.join(read_config_file() , '.sink', 'config', 'config.ini'))
 
     edit_section = edit[section]
     edit_section[attr] = new_attr
 
-    with open( read_config_file() + "/.sink/config/config.ini", "w") as configfile:
+    with open( os.path.join(read_config_file() , '.sink', 'config', 'config.ini') , "w") as configfile:
         edit.write(configfile)
     
 
@@ -116,7 +122,7 @@ def main_init_process():
 
         # Create mentioned subdirectories
         for subdirectory in subdirectories:
-            path = os.path.join(CURRENT_LOCATION + "/.sink" , subdirectory)
+            path = os.path.join(CURRENT_LOCATION , ".sink" , subdirectory)
             os.mkdir(path)
 
         # Check if drive-sink is available in users directory, else -> initialise it (with name .drive-sink)
@@ -131,19 +137,22 @@ def main_init_process():
         # config file
         generate_config_file()
         
+        
         # ignore files
-        with open("./.sink/ignore.txt", "w+") as file:
+        with open(os.path.join('.', '.sink', 'ignore.txt'), "w+") as file:
             text = "!__pycache__\n!.sink\n!sink\ncredentials.json\ntoken.json"
             file.write(text)
             
+        
         # usage log
-        with open("./.sink/log/usage.log", "w+") as file:
+        with open(os.path.join('.','.sink','log','usage.log'), "w+") as file:
             time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             log_message = f"[{time}] : Initialised Folder at -> {CURRENT_LOCATION}"
             file.write(log_message)
 
+        
         # commit log
-        with open("./.sink/log/commit.log", "w+") as file:
+        with open(os.path.join('.', '.sink', 'log', 'commit.log'), "w+") as file:
             time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             log_message = f"[{time}] : Initialised Folder at -> {CURRENT_LOCATION}"
             file.write(log_message)
