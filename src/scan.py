@@ -363,7 +363,7 @@ def make_file_changes():
             file_data[file] = File(value[1], value[0], parent_id, new_file_id, new_file_hash)
         
         write_metadata(file_data, 0)
-        print(file_data[file])
+        # print(file_data[file])
 
     # Deletion
 

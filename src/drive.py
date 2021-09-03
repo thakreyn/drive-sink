@@ -78,11 +78,12 @@ class MyDrive():
             for item in items:
                 print(u'{0} ({1})'.format(item['name'], item['id']))
 
-
+    
     def upload_file(self, filename, path, folder_id):
         """ Uploads the given filename to the drive in given folder id """
 
         media = MediaFileUpload(os.path.join(path, filename))
+
 
         file_metadata = {
             'name': filename,
@@ -113,7 +114,6 @@ class MyDrive():
             media_body = update_media).execute()
 
 
-
     def create_folder(self, folder_name, parent_folder = ""):
         """ Creates a folder in the drive with specified name and parent (no parent by default) """
 
@@ -132,8 +132,9 @@ class MyDrive():
         file = self.service.files().create(body=file_metadata,
                                             fields='id').execute()
 
-        print(f"\rNew folder created! {file.get('id')} : {folder_name}                                                                     ", end='')
+        print(f"\rNew folder created! {file.get('id')} : {folder_name}                                            ", end='')
         return file.get('id')
+
 
     def delete_file(self, file_id):
         """ Deletes the file / folder with given id"""
