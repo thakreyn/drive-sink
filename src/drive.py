@@ -132,7 +132,7 @@ class MyDrive():
         file = self.service.files().create(body=file_metadata,
                                             fields='id').execute()
 
-        print(f"\r                                                                                                                       \rNew folder created! {file.get('id')} : {folder_name}", end='')
+        print(f"\rNew folder created! {file.get('id')} : {folder_name}                                                                     ", end='')
         return file.get('id')
 
     def delete_file(self, file_id):
