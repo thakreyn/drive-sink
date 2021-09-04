@@ -7,7 +7,7 @@ def readme():
 
 setup(
     name = 'sink',
-    version = '1.0.1',
+    version = '1.0.2',
     description = "Sink is a CLI synchronisation app for Google Drive",
     long_description = readme(),
     author = 'Yash Thakre',
