@@ -368,7 +368,11 @@ def make_file_changes():
     # Deletion
 
     for file, data in deleted_files.items():
-        mydrive.delete_file(data.file_id)
+        try:
+            mydrive.delete_file(data.file_id)
+        except:
+            print("File Not Found on the Drive")
+            
         file_data.pop(file)
         write_metadata(file_data, 0)
 
